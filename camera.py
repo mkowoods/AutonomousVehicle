@@ -38,15 +38,17 @@ class RaspberryPiCamera:
     @classmethod
     def _camera_stream_thread(cls):
         with picamera.PiCamera() as cam:
-            cam.resolution = (320, 240)
+            logging.info("initializing connection to cam")
+            cam.resolution = (400, 400)
             #cam.hflip = True
             #cam.vflip = True
 
+            logging.info("Starting Camera Preview")
             cam.start_preview()
-            #time.sleep(2)
+            time.sleep(0.5)
+            logging.info("Completed Preview")
 
             stream = io.BytesIO()
-
             for _ in cam.capture_continuous(stream, 'jpeg', use_video_port = True):
 
                 stream.seek(0)
@@ -56,6 +58,7 @@ class RaspberryPiCamera:
                 stream.truncate()
 
                 if (time.time() - cls.last_access) > cls.timeout:
+                    logging.info("Hit Time Out")
                     break
         cls.thread = None
 

@@ -2,7 +2,7 @@ from flask import Flask, render_template, Response
 import config
 import logging
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 
 if config.PRODUCTION:
@@ -13,7 +13,7 @@ else:
 
 def gen(camera):
     while True:
-        frame =  camera.get_frame()
+        frame = camera.get_frame()
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
