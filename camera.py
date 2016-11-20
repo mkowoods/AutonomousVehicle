@@ -29,21 +29,21 @@ class RaspberryPiCamera:
         if cls.thread is None:
             cls.thread = threading.Thread(target=self._camera_stream_thread)
             cls.thread.start()
-
+            logging.info("Initialized  Camera Thread waiting for frame to be set")
             while self.frame is None:
                 pass
 
-            print "received first frame"
+            logging.info("first frame received")
 
     @classmethod
     def _camera_stream_thread(cls):
         with picamera.PiCamera() as cam:
             cam.resolution = (320, 240)
-            cam.hflip = True
-            cam.vflip = True
+            #cam.hflip = True
+            #cam.vflip = True
 
             cam.start_preview()
-            time.sleep(2)
+            #time.sleep(2)
 
             stream = io.BytesIO()
 

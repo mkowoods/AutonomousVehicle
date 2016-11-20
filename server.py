@@ -1,5 +1,9 @@
 from flask import Flask, render_template, Response
 import config
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
 
 if config.PRODUCTION:
     from camera import RaspberryPiCamera as Camera
@@ -23,6 +27,7 @@ def index():
 
 @app.route('/video_feed')
 def feed():
+    logging.info("connect to /video_feed")
     return Response(gen(Camera()),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
@@ -32,5 +37,5 @@ def send_data():
     pass
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="0.0.0.0", debug=False)
 
