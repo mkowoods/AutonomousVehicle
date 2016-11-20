@@ -1,5 +1,11 @@
 from flask import Flask, render_template, Response
-from camera import TestCamera as Camera
+import config
+
+if config.PRODUCTION:
+    from camera import RaspberryPiCamera as Camera
+else:
+    from camera import TestCamera as Camera
+
 
 def gen(camera):
     while True:
@@ -26,5 +32,5 @@ def send_data():
     pass
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=True)
 
