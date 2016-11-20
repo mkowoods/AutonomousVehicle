@@ -56,9 +56,9 @@ class RaspberryPiCamera:
 
                 stream.seek(0)
                 stream.truncate()
-
-                if (time.time() - cls.last_access) > cls.timeout:
-                    logging.info("Hit Time Out")
+                now = time.time()
+                if (now - cls.last_access) > cls.timeout:
+                    logging.info("Hit Time Out time: %.2f, last_access: %.2f, timeout: %.2f"%(now, cls.last_access, cls.timeout))
                     break
         cls.thread = None
 
