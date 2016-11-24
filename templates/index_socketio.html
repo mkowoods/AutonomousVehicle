@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+     <title>Flask-SocketIO Test</title>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function() {
+            namespace = '/test';
+            url = location.protocol + '//' + document.domain + ':' + location.port + namespace;
+            var socket = io.connect(url);
+
+            socket.on('connect', function() {
+                socket.emit('my_event', {data: 'I\'m connected!'});
+            });
+
+            socket.on('my_response', function(msg) {
+                $('#log').append('<br>' + $('<div/>').text('Received #' + msg.count + ': ' + msg.data).html());
+            });
+
+            socket.on('get_image_event', function(msg) {
+                  //update image tag
+                console.log("got get_image_event")
+                $("#img-tag").attr("src", msg.data)
+                socket.emit('get_image_ping', {data: null})
+            })
+
+        })
+    </script>
+</head>
+<body>
+Image:
+<img id="img-tag" src="">
+Data:
+<div id="log"></div>
+
+
+</body>
+</html>

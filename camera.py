@@ -14,6 +14,8 @@ class TestCamera:
         self.frames = [open(self.img_path_template%i, 'rb').read() for i in range(1, 4)]
 
     def get_frame(self):
+        logging.info( "new frame" )
+        time.sleep(0.2)
         return self.frames[int(time.time()) % 3]
 
 
@@ -39,7 +41,7 @@ class RaspberryPiCamera:
     def _camera_stream_thread(cls):
         with picamera.PiCamera() as cam:
             logging.info("initializing connection to cam")
-            cam.resolution = (400, 400)
+            cam.resolution = (320, 240)
             #cam.hflip = True
             #cam.vflip = True
 
@@ -64,7 +66,7 @@ class RaspberryPiCamera:
 
     def get_frame(self):
 
-        self.last_access = time.time()
+        RaspberryPiCamera.last_access = time.time()
         self.start_streaming()
         return self.frame
 

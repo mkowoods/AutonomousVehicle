@@ -1,11 +1,13 @@
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, request
 import config
 import logging
+import gopigo_mockup as gopigo
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 
 if config.PRODUCTION:
+    #import gopigo
     from camera import RaspberryPiCamera as Camera
 else:
     from camera import TestCamera as Camera
@@ -13,6 +15,7 @@ else:
 
 def gen(camera):
     while True:
+
         frame = camera.get_frame()
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
@@ -32,10 +35,24 @@ def feed():
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
+
+
 @app.route('/post_data')
 def send_data():
-    pass
+    cmd = request.args.get("cmd")
+    logging.info("received cmd %s"%cmd)
+
+    if cmd == "fwd":
+        gopigo.forward()
+    elif cmd == "bwd":
+        gopigo.backward()
+    elif cmd == "inc_speed":
+        gopigo.increase_speed()
+    elif cmd == "dec_speed":
+        gopigo.decrease_speed()
+
+    return "data"
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=False)
+    app.run(host="0.0.0.0", debug=False, threaded = True)
 
